@@ -9,6 +9,7 @@ App for visualizing gym activities, exercises feature to come.
 - docker-compose build
 - docker-compose run --rm phoenix mix deps.get
 - docker-compose run --rm phoenix mix ecto.create
+- docker-compose run --rm phoenix mix ecto.migrate
 - docker-compose up
 
 # Key files for your own app
