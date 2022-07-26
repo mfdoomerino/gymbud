@@ -1,5 +1,8 @@
 # gymbud
-All contained in a docker container
+App for visualizing gym activities, exercises feature to come.
+
+# Links for needed dependencies
+- https://docs.docker.com/compose/install/
 
 # Initialization
 - delete pgdata folder
@@ -8,7 +11,7 @@ All contained in a docker container
 - docker-compose run --rm phoenix mix ecto.create
 - docker-compose up
 
-# Key files and changes from scratch
+# Key files for your own app
 - Dockerfile (all)
 - docker-compose.yml (all)
 - dev.exs (hostname: "db", http: [ip: {0, 0, 0, 0}, port: 4000])
