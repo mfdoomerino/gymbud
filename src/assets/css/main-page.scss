@@ -5,4 +5,8 @@
 
 .heading {
   @apply font-semibold mb-3 uppercase text-sm tracking-[.06em] text-[#7C7D89];
+  
+  &.-warning {
+    @apply text-red-400;
+  }
 }

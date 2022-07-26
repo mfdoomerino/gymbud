@@ -11,7 +11,7 @@
     </datalist>
   
     <%= label f, :description, class: "form-label" %>
-    <%= text_input f, :description, class: "form-input mb-2", autocomplete: "off", placeholder: "e.g. Supersets, twice a week" %>
+    <%= textarea f, :description, class: "form-input mb-2 resize-none", autocomplete: "off", placeholder: "e.g. Supersets, twice a week" %>
     <%= error_tag f, :description %>
   
     <%= label f, :day, class: "form-label" %>

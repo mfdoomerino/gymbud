@@ -48,7 +48,7 @@ defmodule GymbudWeb.AppLive do
   def handle_info({:create_workout, workout}, %{assigns: assigns} = socket) do
     socket =
       socket
-      |> assign(workouts: assigns.workouts ++ [workout])
+      |> assign(workouts: set_workouts(assigns.pagination_options))
       |> put_flash(:info, "Workout created successfully")
 
     {:noreply, socket}
