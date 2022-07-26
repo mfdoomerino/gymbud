@@ -5,7 +5,6 @@ App for visualizing gym activities, exercises feature to come.
 - https://docs.docker.com/compose/install/
 
 # Initialization
-- delete pgdata folder
 - docker-compose build
 - docker-compose run --rm phoenix mix deps.get
 - docker-compose run --rm phoenix mix ecto.create
