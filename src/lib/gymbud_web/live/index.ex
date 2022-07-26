@@ -3,6 +3,9 @@ defmodule GymbudWeb.AppLive do
   alias Gymbud.Workouts
   alias Gymbud.Workouts.Workout
 
+  # TODO: Optimize last page identification
+  # TODO: Update form changeset validation
+
   on_mount {MyAppWeb.OnMount, :admin}
 
   def mount(_params,_, socket) do
