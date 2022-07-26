@@ -1,0 +1,23 @@
+<div class="mb-4">
+  <.form let={f} for={@changeset} phx-change="change" phx-submit="submit_workout" class="flex flex-col p-4 border border-gray-300 rounded-lg bg-white h-fit" phx-target={ @myself }>
+    <h1 class="heading">Create a new <span class="text-[#5464FF]">workout</span></h1>
+    <%= label f, :name, class: "form-label" %>
+    <%= text_input f, :name, class: "form-input mb-2", autocomplete: "off", list: "matches", placeholder: "e.g. Arnold Wannabe", phx_debounce: "100" %>
+    <%= error_tag f, :name %>
+    <datalist id="matches">
+      <%= for match <- @matches do %>
+        <option value={ match }><%= match %></option>
+      <% end %>
+    </datalist>
+  
+    <%= label f, :description, class: "form-label" %>
+    <%= text_input f, :description, class: "form-input mb-2", autocomplete: "off", placeholder: "e.g. Supersets, twice a week" %>
+    <%= error_tag f, :description %>
+  
+    <%= label f, :day, class: "form-label" %>
+    <%= select f, :day, days(), class: "form-select" %>
+    <%= error_tag f, :day %>
+  
+    <%= submit "Create", class: "button mt-4 ml-auto", disabled: !valid_changeset?(@changeset) %>
+  </.form>
+</div>

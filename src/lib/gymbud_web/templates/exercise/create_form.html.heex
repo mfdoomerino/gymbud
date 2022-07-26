@@ -1,0 +1,14 @@
+<div>
+  <.form let={f} for={@changeset} phx-change="change" phx-submit="submit_workout" class="flex flex-col p-4 border border-gray-300 rounded-lg bg-white h-fit" phx-target={ @myself }>
+    <h1 class="heading">Create a new <span class="text-[#5464FF]">exercise</span></h1>
+    <%= label f, :name, class: "form-label" %>
+    <%= text_input f, :name, class: "form-input", autocomplete: "off" %>
+    <%= error_tag f, :name %>
+  
+    <%= label f, :description, class: "form-label" %>
+    <%= text_input f, :description, class: "form-input", autocomplete: "off" %>
+    <%= error_tag f, :description %>
+  
+    <%= submit "Create", class: "button mt-4 ml-auto", disabled: !valid_changeset?(@changeset) %>
+  </.form>
+</div>

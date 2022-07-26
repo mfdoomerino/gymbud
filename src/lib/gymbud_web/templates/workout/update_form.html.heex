@@ -1,0 +1,18 @@
+<div>
+  <.form let={uf} for={@update_changeset} phx-change="update_change" phx-submit="update_workout" class="flex flex-col p-2 h-fit", id={ "#{@workout.workout_id}-update-form" }, phx-target={ @myself }>
+    <%= hidden_input uf, :workout_id %>
+    <%= label uf, :name, class: "form-label" %>
+    <%= text_input uf, :name, class: "form-input mb-2", autocomplete: "off" %>
+    <%= error_tag uf, :name %>
+  
+    <%= label uf, :description, class: "form-label" %>
+    <%= text_input uf, :description, class: "form-input mb-2", autocomplete: "off" %>
+    <%= error_tag uf, :description %>
+  
+    <%= label uf, :day, class: "form-label" %>
+    <%= select uf, :day, days(), class: "form-select" %>
+    <%= error_tag uf, :day %>
+  
+    <%= submit "Update", class: "button mt-4 ml-auto" %>
+  </.form>
+</div>

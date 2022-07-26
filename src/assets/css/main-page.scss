@@ -1,0 +1,8 @@
+.main-page {
+  @apply p-4 w-full overflow-hidden h-screen
+  bg-[#F3F9FE];
+}
+
+.heading {
+  @apply font-semibold mb-3 uppercase text-sm tracking-[.06em] text-[#7C7D89];
+}

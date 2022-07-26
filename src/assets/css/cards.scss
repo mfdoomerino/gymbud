@@ -1,0 +1,14 @@
+.workout-card {
+  @apply border border-gray-300 p-2 rounded bg-[#5464FF] text-white
+  flex flex-col;
+  &.-editing {
+    @apply border border-gray-300 p-2 rounded bg-white text-black
+  flex flex-col;
+  }
+  > .description {
+    @apply text-sm;
+  }
+  > .days {
+    @apply border border-gray-200 p-[2px] rounded text-sm w-fit border-gray-100 bg-white text-black;
+  }
+}

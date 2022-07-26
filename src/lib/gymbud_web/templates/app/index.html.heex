@@ -1,0 +1,45 @@
+<div class="grid main-page lg:grid-cols-2 gap-4">
+  <div>
+    <div class="heading">Hi, <%= @current_user %>. Let's get you started.</div>
+    <.live_component module={WorkoutForm}
+      id="workout-create-form"
+      changeset={ @changeset }
+      workouts={ @workouts }
+      workout={ %{} }
+      type="create"
+    />
+    <.live_component module={ExerciseForm}
+      id="exercise-create-form"
+      changeset={ @changeset }
+      type="create"
+    />
+  </div>
+  <div>
+    <div class="mb-2 flex justify-between">
+      <div>
+        <%= live_patch "Workouts", to: Routes.live_path(@socket, GymbudWeb.AppLive, section: :workout), class: "#{is_active(@section, :workout)} mr-1" %>
+        <%= live_patch "Exercises", to: Routes.live_path(@socket, GymbudWeb.AppLive, section: :exercise), class: "#{is_active(@section, :exercise)} mr-1" %>
+      </div>
+      <div>
+        <%= if @pagination_options["page"] > 1 do %>
+          <%= live_patch "Prev Page", to: Routes.live_path(@socket, GymbudWeb.AppLive, page: @pagination_options["page"] - 1, per_page: @pagination_options["per_page"]), class: "#{is_active(@section, nil)} mr-1" %>
+        <% end %>
+        <%= if @has_next do %>
+          <%= live_patch "Next Page", to: Routes.live_path(@socket, GymbudWeb.AppLive, page: @pagination_options["page"] + 1, per_page: @pagination_options["per_page"]), class: "#{is_active(@section, nil)} mr-1" %>
+        <% end %>
+      </div>
+    </div>
+    <%= if @section == :workout do %>
+      <.live_component module={WorkoutIndex}
+        id="workout-index"
+        workouts={ @workouts }
+        editing={ @editing }
+      />
+    <% else %>
+      <.live_component module={ExerciseIndex}
+        id="exercise-index"
+        exercises={ [] }
+      />
+    <% end %>
+  </div>
+</div>
