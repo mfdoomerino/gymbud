@@ -3,7 +3,7 @@ defmodule Gymbud.Repo.Migrations.CreateExercises do
 
   def change do
     create table(:exercise, primary_key: false) do
-      add(:exercise_id, :binary_id, primary_key: true)
+      add(:exercise_id, :binary_id, primary_key: true, default: fragment("uuid_generate_v4()"))
       add(:name, :string, null: false)
       add(:sets, :integer, null: false)
       add(:reps, :integer, null: false)

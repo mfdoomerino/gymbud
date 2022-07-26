@@ -14,6 +14,7 @@ defmodule Gymbud.ExercisesFixtures do
         "description" => "some desc",
         "day" => "Monday"
       })
+
     {:ok, exercise} =
       attrs
       |> Enum.into(%{

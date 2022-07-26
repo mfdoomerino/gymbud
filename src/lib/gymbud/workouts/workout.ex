@@ -5,6 +5,7 @@ defmodule Gymbud.Workouts.Workout do
 
   @primary_key {:workout_id, :binary_id, autogenerate: true}
   @derive {Phoenix.Param, key: :workout_id}
+  @foreign_key_type :binary_id
 
   schema "workout" do
     field :name, :string

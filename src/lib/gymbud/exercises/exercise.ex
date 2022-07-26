@@ -1,10 +1,10 @@
 defmodule Gymbud.Exercises.Exercise do
   use Ecto.Schema
   import Ecto.Changeset
-  alias Gymbud.Workouts.Workout
 
   @primary_key {:exercise_id, :binary_id, autogenerate: true}
   @derive {Phoenix.Param, key: :exercise_id}
+  @foreign_key_type :binary_id
 
   schema "exercise" do
     field :name, :string
@@ -12,7 +12,7 @@ defmodule Gymbud.Exercises.Exercise do
     field :sets, :integer
     field :weight, :integer
 
-    belongs_to(:workout, Workout,
+    belongs_to(:workout, Gymbud.Workouts.Workout,
       references: :workout_id,
       foreign_key: :workout_id
     )
@@ -29,7 +29,7 @@ defmodule Gymbud.Exercises.Exercise do
   ]
 
   @doc false
-  def changeset(exercise, attrs) do
+  def changeset(exercise, attrs \\ %{}) do
     exercise
     |> cast(attrs, @attrs)
     |> validate_required(@attrs)
