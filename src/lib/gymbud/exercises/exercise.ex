@@ -12,26 +12,30 @@ defmodule Gymbud.Exercises.Exercise do
     field :sets, :integer
     field :weight, :integer
 
-    belongs_to(:workout, Gymbud.Workouts.Workout,
-      references: :workout_id,
-      foreign_key: :workout_id
+    many_to_many(:workouts, Gymbud.Workouts.Workout,
+      join_through: "workout_exercises",
+      join_keys: [exercise_id: :exercise_id, workout_id: :workout_id],
+      on_replace: :delete
     )
 
     timestamps(type: :utc_datetime_usec)
   end
 
-  @attrs [
+  @required [
     :name,
     :sets,
     :reps,
-    :weight,
-    :workout_id
+    :weight
   ]
 
   @doc false
   def changeset(exercise, attrs \\ %{}) do
     exercise
-    |> cast(attrs, @attrs)
-    |> validate_required(@attrs)
+    |> cast(attrs, @required)
+    |> cast_assoc(
+      :workouts,
+      required: false
+    )
+    |> validate_required(@required)
   end
 end

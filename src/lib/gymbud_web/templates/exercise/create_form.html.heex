@@ -1,14 +1,27 @@
 <div>
-  <.form let={f} for={@changeset} phx-change="change" phx-submit="submit_workout" class="flex flex-col p-4 border border-gray-300 rounded-lg bg-white h-fit" phx-target={ @myself }>
+  <.form let={f} for={@changeset} phx-change="change" phx-submit="submit_exercise" class="flex flex-col p-4 border border-gray-300 rounded-lg bg-white h-fit" phx-target={ @myself }>
     <div class="heading -warning">IN PROGRESS</div>
     <h1 class="heading">Create a new <span class="text-[#5464FF]">exercise</span></h1>
     <%= label f, :name, class: "form-label" %>
-    <%= text_input f, :name, class: "form-input", autocomplete: "off" %>
+    <%= text_input f, :name, class: "form-input mb-2", autocomplete: "off" %>
     <%= error_tag f, :name %>
-  
-    <%= label f, :description, class: "form-label" %>
-    <%= textarea f, :description, class: "form-input resize-none", autocomplete: "off" %>
-    <%= error_tag f, :description %>
+
+    <div class="flex align-middle mb-2">
+      <div class="w-1/2 mr-1">
+        <%= label f, :reps, class: "form-label" %>
+        <%= number_input f, :reps, class: "form-input", autocomplete: "off" %>
+        <%= error_tag f, :reps %>
+      </div>
+      <div class="w-1/2 ml-1">
+        <%= label f, :sets, class: "form-label" %>
+        <%= number_input f, :sets, class: "form-input", autocomplete: "off" %>
+        <%= error_tag f, :sets %>
+      </div>
+    </div>
+
+    <%= label f, :weight, "Weight (in kgs)", class: "form-label" %>
+    <%= number_input f, :weight, class: "form-input", autocomplete: "off" %>
+    <%= error_tag f, :weight %>
   
     <%= submit "Create", class: "button mt-4 ml-auto", disabled: !valid_changeset?(@changeset) %>
   </.form>

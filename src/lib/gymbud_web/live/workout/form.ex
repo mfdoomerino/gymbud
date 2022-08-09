@@ -46,16 +46,17 @@ defmodule WorkoutForm do
   end
 
   def handle_event("update_change", %{"workout" => workout}, socket) do
-    changeset = Workout.changeset(%Workout{}, workout)
+    changeset = Workout.update_changeset(%Workout{}, workout)
     {:noreply, assign(socket, %{
-      update_params: workout
+      update_params: workout,
+      update_changeset: changeset
     })}
   end
 
   def handle_event("submit_workout", _params, %{assigns: assigns} = socket) do
     case Workouts.create_workout(assigns.create_params) do
-      {:ok, workout} ->
-        send(self(), {:create_workout, workout})
+      {:ok, _workout} ->
+        send(self(), :create_workout)
         {:noreply, socket}
       _ ->
         send(self(), :default_error)

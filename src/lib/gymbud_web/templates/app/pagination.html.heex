@@ -1,0 +1,8 @@
+<div>
+  <%= if @pagination_options["page"] > 1 do %>
+    <%= live_patch "Prev Page", to: Routes.live_path(@socket, GymbudWeb.AppLive, page: @pagination_options["page"] - 1, per_page: @pagination_options["per_page"]), class: "#{is_active(@section, nil)} mr-1" %>
+  <% end %>
+  <%= if @has_next do %>
+    <%= live_patch "Next Page", to: Routes.live_path(@socket, GymbudWeb.AppLive, page: @pagination_options["page"] + 1, per_page: @pagination_options["per_page"]), class: "#{is_active(@section, nil)} mr-1" %>
+  <% end %>
+</div>

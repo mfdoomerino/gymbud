@@ -1,20 +1,24 @@
 defmodule GymbudWeb.AppLive do
   use GymbudWeb, :live_view
   alias Gymbud.Workouts
+  alias Gymbud.Exercises
   alias Gymbud.Workouts.Workout
-
-  # TODO: Optimize last page identification
-  # TODO: Update form changeset validation
+  alias Gymbud.Exercises.Exercise
 
   on_mount {MyAppWeb.OnMount, :admin}
 
   def mount(_params,_, socket) do
-    changeset = Workout.changeset(%Workout{})
+    workout_changeset = Workout.changeset(%Workout{})
+    exercise_changeset = Exercise.changeset(%Exercise{})
 
     defaults = %{
-      changeset: changeset,
+      workout_changeset: workout_changeset,
+      exercise_changeset: exercise_changeset,
       create_params: %{},
       workouts: [],
+      exercises: [],
+      total_workouts: 0,
+      total_exercises: 0,
       editing: [],
       section: :workout,
       has_next: false,
@@ -36,16 +40,18 @@ defmodule GymbudWeb.AppLive do
 
   def handle_info(:load, socket) do
     socket = assign(socket, %{
-      changeset: socket.assigns.changeset,
-      create_params: %{},
       workouts: set_workouts(socket.assigns.pagination_options),
-      has_next: determine_next(socket.assigns.pagination_options)
+      exercises: set_exercises(socket.assigns.pagination_options),
+      total_workouts: Enum.count(set_workouts(%{})),
+      total_exercises: Enum.count(set_exercises(%{}))
     })
 
-    {:noreply, socket}
+    {_, has_next} = determine_next(socket.assigns.pagination_options, socket.assigns.section, socket.assigns)
+
+    {:noreply, assign(socket, has_next: has_next)}
   end
 
-  def handle_info({:create_workout, workout}, %{assigns: assigns} = socket) do
+  def handle_info(:create_workout, %{assigns: assigns} = socket) do
     socket =
       socket
       |> assign(workouts: set_workouts(assigns.pagination_options))
@@ -54,19 +60,19 @@ defmodule GymbudWeb.AppLive do
     {:noreply, socket}
   end
 
-  def handle_info({:update_workout, workout}, %{assigns: assigns} = socket) do
-    workouts =
-      Enum.map(assigns.workouts, fn w ->
-        if w.workout_id == workout.workout_id do
-          workout
-        else
-          w
-        end
-      end)
-
+  def handle_info(:create_exercise, %{assigns: assigns} = socket) do
     socket =
       socket
-      |> assign(workouts: workouts)
+      |> assign(exercises: set_exercises(assigns.pagination_options))
+      |> put_flash(:info, "Exercise created successfully")
+
+    {:noreply, socket}
+  end
+
+  def handle_info({:update_workout, _workout}, %{assigns: assigns} = socket) do
+    socket =
+      socket
+      |> assign(workouts: set_workouts(assigns.pagination_options))
       |> put_flash(:info, "Workout updated successfully")
 
     {:noreply, socket}
@@ -92,8 +98,20 @@ defmodule GymbudWeb.AppLive do
 
     case Workouts.delete_workout(workout) do
       {:ok, _workout} ->
-        socket = assign(socket, workouts: Enum.filter(assigns.workouts, & &1.workout_id !== id))
+        socket = assign(socket, workouts: set_workouts(socket.assigns.pagination_options))
         {:noreply, put_flash(socket, :info, "Workout deleted successfully")}
+      _ ->
+        {:noreply, put_flash(socket, :error, "Something went wrong")}
+    end
+  end
+
+  def handle_event("delete_exercise", %{"id" => id}, %{assigns: assigns} = socket) do
+    exercise = Enum.find(assigns.exercises, & &1.exercise_id == id)
+
+    case Exercises.delete_exercise(exercise) do
+      {:ok, _workout} ->
+        socket = assign(socket, exercises: set_exercises(socket.assigns.pagination_options))
+        {:noreply, put_flash(socket, :info, "Exercise deleted successfully")}
       _ ->
         {:noreply, put_flash(socket, :error, "Something went wrong")}
     end
@@ -111,16 +129,22 @@ defmodule GymbudWeb.AppLive do
       "per_page" => per_page
     }
 
-    has_next = determine_next(%{
-      "page" => page,
-      "per_page" => per_page
-    })
+    {resources, has_next} = determine_next(options, socket.assigns.section, socket.assigns)
 
-    {:noreply, assign(socket, %{
-      pagination_options: options,
-      workouts: set_workouts(options),
-      has_next: has_next
-    })}
+    section =
+      if socket.assigns.section == :workout do
+        "workouts"
+      else
+        "exercises"
+      end
+
+    {:noreply,
+      assign(socket, %{
+        pagination_options: options,
+        "#{section}": resources,
+        has_next: has_next
+      }
+    )}
   end
 
   def handle_params(_, _uri, socket) do
@@ -134,13 +158,23 @@ defmodule GymbudWeb.AppLive do
     end
   end
 
-  defp determine_next(params) do
-    params = %{
-      "page" => params["page"] + 1,
-      "per_page" => params["per_page"]
-    }
+  defp set_exercises(params) do
+    case Exercises.list_exercises(params) do
+      {:ok, exercises} -> exercises
+      _ -> []
+    end
+  end
 
-    wos = set_workouts(params)
-    wos !== []
+  defp determine_next(params, section, assigns) do
+    {resources, total} =
+      if section == :workout do
+        {set_workouts(params), assigns.total_workouts}
+      else
+        {set_exercises(params), assigns.total_exercises}
+      end
+
+    total = Float.ceil(total/3)
+
+    {resources, params["page"] < total}
   end
 end

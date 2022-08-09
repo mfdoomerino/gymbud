@@ -3,14 +3,12 @@
     <div class="heading">Hi, <%= @current_user %>. Let's get you started.</div>
     <.live_component module={WorkoutForm}
       id="workout-create-form"
-      changeset={ @changeset }
-      workouts={ @workouts }
-      workout={ %{} }
+      changeset={ @workout_changeset }
       type="create"
     />
     <.live_component module={ExerciseForm}
       id="exercise-create-form"
-      changeset={ @changeset }
+      changeset={ @exercise_changeset }
       type="create"
     />
   </div>
@@ -20,14 +18,12 @@
         <%= live_patch "Workouts", to: Routes.live_path(@socket, GymbudWeb.AppLive, section: :workout), class: "#{is_active(@section, :workout)} mr-1" %>
         <%= live_patch "Exercises", to: Routes.live_path(@socket, GymbudWeb.AppLive, section: :exercise), class: "#{is_active(@section, :exercise)} mr-1" %>
       </div>
-      <div>
-        <%= if @pagination_options["page"] > 1 do %>
-          <%= live_patch "Prev Page", to: Routes.live_path(@socket, GymbudWeb.AppLive, page: @pagination_options["page"] - 1, per_page: @pagination_options["per_page"]), class: "#{is_active(@section, nil)} mr-1" %>
-        <% end %>
-        <%= if @has_next do %>
-          <%= live_patch "Next Page", to: Routes.live_path(@socket, GymbudWeb.AppLive, page: @pagination_options["page"] + 1, per_page: @pagination_options["per_page"]), class: "#{is_active(@section, nil)} mr-1" %>
-        <% end %>
-      </div>
+      <.live_component module={Pagination}
+        id="pagination-controls"
+        pagination_options={@pagination_options}
+        section={@section}
+        has_next={@has_next}
+      />
     </div>
     <%= if @section == :workout do %>
       <.live_component module={WorkoutIndex}
@@ -38,7 +34,7 @@
     <% else %>
       <.live_component module={ExerciseIndex}
         id="exercise-index"
-        exercises={ [] }
+        exercises={ @exercises }
       />
     <% end %>
   </div>

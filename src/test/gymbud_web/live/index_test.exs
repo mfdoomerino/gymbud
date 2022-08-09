@@ -4,8 +4,12 @@ defmodule GymbudWeb.Live.IndexTest do
   import Phoenix.LiveViewTest
 
   test "initial render", %{conn: conn} do
-    {:ok, view, html} = live(conn, "/")
+    other_conn = get(conn, "/my-path")
+    {:ok, _view, html} = live(conn, "/")
     assert html =~ "Let&#39;s get you started"
     # invokes mount
+
+    IO.inspect(other_conn)
+    IO.inspect(live(conn, "/"))
   end
 end

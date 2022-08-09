@@ -13,6 +13,6 @@
     <%= select uf, :day, days(), class: "form-select" %>
     <%= error_tag uf, :day %>
   
-    <%= submit "Update", class: "button mt-4 ml-auto" %>
+    <%= submit "Update", class: "button mt-4 ml-auto", disabled: !valid_changeset?(@update_changeset) %>
   </.form>
 </div>

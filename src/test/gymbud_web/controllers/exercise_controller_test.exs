@@ -1,11 +1,11 @@
 defmodule GymbudWeb.ExerciseControllerTest do
-  use GymbudWeb.ConnCase
+  # use GymbudWeb.ConnCase
 
-  import Gymbud.ExercisesFixtures
+  # import Gymbud.Fixtures
 
-  @create_attrs %{name: "some name", reps: 42, sets: 42, weight: 42}
-  @update_attrs %{name: "some updated name", reps: 43, sets: 43, weight: 43}
-  @invalid_attrs %{name: nil, reps: nil, sets: nil, weight: nil}
+  # @create_attrs %{name: "some name", reps: 42, sets: 42, weight: 42}
+  # @update_attrs %{name: "some updated name", reps: 43, sets: 43, weight: 43}
+  # @invalid_attrs %{name: nil, reps: nil, sets: nil, weight: nil}
 
   # describe "index" do
   #   test "lists all exercises", %{conn: conn} do

@@ -32,3 +32,4 @@ gymbud-*.tar
 npm-debug.log
 /assets/node_modules/
 
+pgdata

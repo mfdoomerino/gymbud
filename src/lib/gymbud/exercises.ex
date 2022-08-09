@@ -1,104 +1,44 @@
 defmodule Gymbud.Exercises do
-  @moduledoc """
-  The Exercises context.
-  """
-
   import Ecto.Query, warn: false
   alias Gymbud.Repo
-
   alias Gymbud.Exercises.Exercise
+  alias Gymbud.Queries.ExerciseQueries, as: EQ
 
-  @doc """
-  Returns the list of exercises.
+  @preload [
+    :workouts
+  ]
 
-  ## Examples
+  def list_exercises(params \\ %{}) do
+    exercises =
+      params
+      |> EQ.query_all_exercises(@preload)
+      |> Repo.all()
 
-      iex> list_exercises()
-      [%Exercise{}, ...]
-
-  """
-  def list_exercises do
-    Repo.all(Exercise)
+    {:ok, exercises}
   end
 
-  @doc """
-  Gets a single exercise.
+  def get_exercise(params) do
+    query = EQ.query_all_exercises(params, @preload)
 
-  Raises `Ecto.NoResultsError` if the Exercise does not exist.
+    case Repo.one(query) do
+      nil -> {:error, :not_found}
+      exercise -> {:ok, exercise}
+    end
+  end
 
-  ## Examples
-
-      iex> get_exercise!(123)
-      %Exercise{}
-
-      iex> get_exercise!(456)
-      ** (Ecto.NoResultsError)
-
-  """
-  def get_exercise!(id), do: Repo.get!(Exercise, id)
-
-  @doc """
-  Creates a exercise.
-
-  ## Examples
-
-      iex> create_exercise(%{field: value})
-      {:ok, %Exercise{}}
-
-      iex> create_exercise(%{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
   def create_exercise(attrs \\ %{}) do
     %Exercise{}
     |> Exercise.changeset(attrs)
     |> Repo.insert()
   end
 
-  @doc """
-  Updates a exercise.
-
-  ## Examples
-
-      iex> update_exercise(exercise, %{field: new_value})
-      {:ok, %Exercise{}}
-
-      iex> update_exercise(exercise, %{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
   def update_exercise(%Exercise{} = exercise, attrs) do
     exercise
     |> Exercise.changeset(attrs)
     |> Repo.update()
   end
 
-  @doc """
-  Deletes a exercise.
-
-  ## Examples
-
-      iex> delete_exercise(exercise)
-      {:ok, %Exercise{}}
-
-      iex> delete_exercise(exercise)
-      {:error, %Ecto.Changeset{}}
-
-  """
   def delete_exercise(%Exercise{} = exercise) do
     Repo.delete(exercise)
-  end
-
-  @doc """
-  Returns an `%Ecto.Changeset{}` for tracking exercise changes.
-
-  ## Examples
-
-      iex> change_exercise(exercise)
-      %Ecto.Changeset{data: %Exercise{}}
-
-  """
-  def change_exercise(%Exercise{} = exercise, attrs \\ %{}) do
-    Exercise.changeset(exercise, attrs)
   end
 end
